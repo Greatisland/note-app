@@ -23,7 +23,7 @@ const ContentArea = styled.textarea`
     let jsonDB = JSON.stringify(currentDB)
     console.log(currentDB)
 
-    window.localStorage.setItem("솜사탕", jsonDB)
+    localStorage.setItem(`${currentDB.title}`, jsonDB)
   }
 
   return (
@@ -33,6 +33,11 @@ const ContentArea = styled.textarea`
         <ContentArea onChange={(e) => setContents(e.target.value)}></ContentArea>
         <button>Done</button>
       </form>
+      <button onClick={()=>{
+        console.log(
+          JSON.parse(localStorage.getItem('솜사탕'))
+        )
+      }}>알아보아용</button>
     </>
   )
 }
