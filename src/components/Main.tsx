@@ -16,10 +16,6 @@ const NoteListContainer = styled.ul`
 
 `
 
-interface Notes {
-
-}
-
 interface NoteType {
   title : string,
   contents:string,
@@ -27,38 +23,35 @@ interface NoteType {
 }
 
 
-
  const Main = () => {
-  let test = []
-  let noteDatas = []
+  
+  const [noteDatas, setNoteDatas] = useState([])
 
   const renderNotes = () => {
+    const test = []
 
-    for(let i = 0; i < localStorage.length; i++){
-      let key = localStorage.key(i)
-      let value = localStorage.getItem(key)
-      if(value !== null && value !== undefined){
-        // let jsonValue = JSON.parse(value)
-        test.push([key,value])
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      const value = localStorage.getItem(key)
+
+      if (typeof value === "string" && value !== null && value !== undefined) {
+        // try catch문 사용하면 parse되는데 그냥 작성할 경우 안됨. ?
+        try {
+          const jsonValue = JSON.parse(value)
+          test.push(jsonValue)
+        } catch (error) {
+          console.error(`왜안돼냐: ${value}`)
+        }
+          // const jsonValue = JSON.parse(value)
+          // test.push(jsonValue)
       }
     }
-    noteDatas = test.map((value, i) => {
-      try {
-        let jsonValue = JSON.parse(value[1]);
-        return jsonValue
-      } catch (e) {
-        console.error(`Failed to parse JSON string: ${value[1]}`);
-      }
-    })
-    // let local = localStorage.getItem("솜사탕")
-    // if (local !== null) {
-    //   const value = JSON.parse(local)
-    //   setNoteData([value])
-    // }
+    setNoteDatas(test)
   }
-  
-  renderNotes()
-  console.log(noteDatas)
+
+  useEffect(()=>{
+    renderNotes()
+  }, [noteDatas])
 
   return (
     <>
@@ -67,9 +60,9 @@ interface NoteType {
       </form>
       {
         noteDatas?.map((data, i) => (
-          <ul key={i}>
+          <NoteListContainer key={i}>
             <li>{`${data.title} / ${data.contents}`}</li>
-          </ul>
+          </NoteListContainer>
         ))
       }
     </>
