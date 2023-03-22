@@ -28,30 +28,13 @@ interface NoteType {
   const [noteDatas, setNoteDatas] = useState([])
 
   const renderNotes = () => {
-    const test = []
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i)
-      const value = localStorage.getItem(key)
-
-      if (typeof value === "string" && value !== null && value !== undefined) {
-        // try catch문 사용하면 parse되는데 그냥 작성할 경우 안됨. ?
-        try {
-          const jsonValue = JSON.parse(value)
-          test.push(jsonValue)
-        } catch (error) {
-          console.error(`왜안돼냐: ${value}`)
-        }
-          // const jsonValue = JSON.parse(value)
-          // test.push(jsonValue)
-      }
-    }
-    setNoteDatas(test)
+    const data = localStorage.getItem('memoKey')
+    if(data !== null && data !== undefined && typeof data === 'string') setNoteDatas(JSON.parse(data))
   }
 
   useEffect(()=>{
     renderNotes()
-  }, [noteDatas])
+  }, [])
 
   return (
     <>
@@ -61,7 +44,7 @@ interface NoteType {
       {
         noteDatas?.map((data, i) => (
           <NoteListContainer key={i}>
-            <li>{`${data.title} / ${data.contents}`}</li>
+            <li>{`${data.title} / ${data.contents} / ${data.date}`}</li>
           </NoteListContainer>
         ))
       }
