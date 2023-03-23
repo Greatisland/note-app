@@ -1,6 +1,8 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { useState } from 'react'
 import styled from "styled-components"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from './store'
 
 const TitleArea = styled.input`
   
@@ -10,13 +12,27 @@ const ContentArea = styled.textarea`
   
 `
 
- const Modify = () => {
-  const [title, setTitle] = useState('')
-  const [contents, setContents] = useState('')
+const NormalButton = styled.div`
+`
+
+interface Props {
+  IsRender: IsRender
+  SelectValue: {}
+}
+
+interface IsRender {
+  isRender: () => void
+}
+
+ const Modify = (props: Props) => {
+  const state = useSelector<RootState, object>(state => state.cart)
+  const [title, setTitle] = useState(state.title)
+  const [contents, setContents] = useState(state.contents)
 
   const handlerFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     let dataBase = []
+
 
     const date: string = 
     new Date().getFullYear().toString() +'.'+ (new Date().getMonth()+1).toString().padStart(2,'0') 
@@ -29,19 +45,32 @@ const ContentArea = styled.textarea`
       dataBase.push(...JSON.parse(data))
     }
 
-    //현재 입력값을 dataBase에 추가한 후 다시 로컬스토리지에 추가
-    dataBase.push(currentDB)
-    const jsonDB = JSON.stringify(dataBase)
-    localStorage.setItem(`memoKey`, jsonDB)
+    if(state.index){
+      //index값이 존재할 경우(수정)해당 index요소 제거후 새 값 추가 및 로컬스토리지에도 추가
+      dataBase.splice(state.index, 1, currentDB)
+      const jsonDB = JSON.stringify(dataBase)
+      localStorage.setItem(`memoKey`, jsonDB)
+    }else{
+      //현재 입력값을 dataBase에 추가한 후 다시 로컬스토리지에 추가
+      dataBase.push(currentDB)
+      const jsonDB = JSON.stringify(dataBase)
+      localStorage.setItem(`memoKey`, jsonDB)
+    }
   }
+
 
   return (
     <>
+      <NormalButton onClick={props.isRender}>Back</NormalButton>
       <form onSubmit={handlerFormSubmit}>
-        <TitleArea type="text" onChange={(e)=> setTitle(e.target.value)}></TitleArea>
-        <ContentArea onChange={(e) => setContents(e.target.value)}></ContentArea>
+        <TitleArea type="text" value={title} onChange={(e)=> setTitle(e.target.value)}></TitleArea>
+        <ContentArea value={contents} onChange={(e) => setContents(e.target.value)}></ContentArea>
         <button>Done</button>
       </form>
+
+      {/* <div onClick={
+        console.log(state)
+      }>state값 확인하장</div> */}
     </>
   )
 }
