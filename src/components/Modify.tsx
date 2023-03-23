@@ -2,7 +2,6 @@ import React, { useEffect } from "react"
 import { useState } from 'react'
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from './store'
 
 const TitleArea = styled.input`
   
@@ -25,14 +24,13 @@ interface IsRender {
 }
 
  const Modify = (props: Props) => {
-  const state = useSelector<RootState, object>(state => state.cart)
+  const state = useSelector(state => state.cart)
   const [title, setTitle] = useState(state.title)
   const [contents, setContents] = useState(state.contents)
 
   const handlerFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     let dataBase = []
-
 
     const date: string = 
     new Date().getFullYear().toString() +'.'+ (new Date().getMonth()+1).toString().padStart(2,'0') 
@@ -45,12 +43,20 @@ interface IsRender {
       dataBase.push(...JSON.parse(data))
     }
 
+    //index값이 존재할 경우(수정)해당 index요소 제거후 새 값 추가 및 로컬스토리지에도 추가
     if(state.index){
-      //index값이 존재할 경우(수정)해당 index요소 제거후 새 값 추가 및 로컬스토리지에도 추가
-      dataBase.splice(state.index, 1, currentDB)
+      
+      if(e.target.value === 'del'){
+        dataBase.splice(state.index, 1)
+      }else{
+        dataBase.splice(state.index, 1, currentDB)
+      }
+
       const jsonDB = JSON.stringify(dataBase)
       localStorage.setItem(`memoKey`, jsonDB)
+
     }else{
+
       //현재 입력값을 dataBase에 추가한 후 다시 로컬스토리지에 추가
       dataBase.push(currentDB)
       const jsonDB = JSON.stringify(dataBase)
@@ -67,10 +73,7 @@ interface IsRender {
         <ContentArea value={contents} onChange={(e) => setContents(e.target.value)}></ContentArea>
         <button>Done</button>
       </form>
-
-      {/* <div onClick={
-        console.log(state)
-      }>state값 확인하장</div> */}
+      <button value={`del`} onClick={handlerFormSubmit}>delete</button>
     </>
   )
 }
