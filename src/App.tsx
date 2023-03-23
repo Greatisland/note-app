@@ -3,7 +3,6 @@ import Main from './components/Main'
 import Modify from './components/Modify'
 import { createGlobalStyle } from "styled-components"
 import styled from 'styled-components'
-import { render } from 'react-dom'
 
 const GlobalStyle = createGlobalStyle`
   * {margin: 0; padding: 0; color: #333;}
@@ -48,7 +47,7 @@ function App() {
     <NoteBG>
       <GlobalStyle />
       <NoteContainer>
-        <h1 onClick={isRender}>Notes App</h1>
+        <h1>Notes App</h1>
         <p>You can create, modify, erase, and search notes.</p>
         {renderComp&&<Main isRender={isRender}></Main>}
         {renderComp||<Modify isRender={isRender}></Modify>}
