@@ -56,5 +56,4 @@ function App() {
     </NoteBG>
   )
 }
-
 export default App

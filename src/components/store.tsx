@@ -16,16 +16,10 @@ let note = createSlice({
       state.date = action.payload.date
       console.log(state.index)
     },
-    createNote(state, action){
-      state.title = ''
-      state.index = ''
-      state.contents = ''
-      state.date = ''
-    }
   }
 })
 
-export let {selectNote, createNote} = note.actions
+export let {selectNote} = note.actions
 const store = configureStore({
   reducer : {
     cart: note.reducer,

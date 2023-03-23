@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useState } from 'react'
 import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 
 const TitleArea = styled.input`
   
@@ -54,16 +54,16 @@ interface IsRender {
 
       const jsonDB = JSON.stringify(dataBase)
       localStorage.setItem(`memoKey`, jsonDB)
+      props.isRender()
 
-    }else{
-
+    }else if(title !== state.title && contents !== state.contents){
       //현재 입력값을 dataBase에 추가한 후 다시 로컬스토리지에 추가
       dataBase.push(currentDB)
       const jsonDB = JSON.stringify(dataBase)
       localStorage.setItem(`memoKey`, jsonDB)
+      props.isRender()
     }
   }
-
 
   return (
     <>
@@ -73,7 +73,7 @@ interface IsRender {
         <ContentArea value={contents} onChange={(e) => setContents(e.target.value)}></ContentArea>
         <button>Done</button>
       </form>
-      <button value={`del`} onClick={handlerFormSubmit}>delete</button>
+      <button value={'del'} onClick={handlerFormSubmit}>delete</button>
     </>
   )
 }

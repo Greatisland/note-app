@@ -1,7 +1,7 @@
-import { useEffect,useState } from "react"
+import React, { useEffect,useState } from "react"
 import styled from "styled-components"
-import { selectNote, createNote } from "./store"
-import { useDispatch, useSelector } from "react-redux"
+import { selectNote } from "./store"
+import { useDispatch } from "react-redux"
 
 const SearchBar = styled.input`
   width: 100%;
@@ -21,23 +21,16 @@ const NoteListContainer = styled.ul`
 const NormalButton = styled.div`
   
 `
-
-interface NoteType {
-  title : string,
-  contents:string,
-  date:string
-}
-
 interface IsRender {
   isRender: () => void
 }
-
 
  const Main = (props: IsRender) => {
 
   let dispatch = useDispatch()
 
   const [noteDatas, setNoteDatas] = useState([])
+  const [keyword, setKeyword] = useState('')
 
   const renderNotes = () => {
     const data = localStorage.getItem('memoKey')
@@ -62,6 +55,10 @@ interface IsRender {
     dispatch(selectNote({title: '', contents: '', index: '', date: ''}))
     props.isRender()
   }
+
+  const searchKeyword = (e: React.FormEvent) => {
+    e.preventDefault()
+  }
   
   useEffect(()=>{
     renderNotes()
@@ -70,8 +67,8 @@ interface IsRender {
 
    return (
      <>
-      <form>
-        <SearchBar type="search" placeholder="Please typing keyword this place."></SearchBar>
+      <form onSubmit={searchKeyword}>
+        <SearchBar type="search" onChange={(e) => setKeyword(e.target.value)} placeholder="Please typing keyword this place."></SearchBar>
       </form>
       {
         noteDatas?.map((data, i) => (
