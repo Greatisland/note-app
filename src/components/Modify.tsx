@@ -1,16 +1,37 @@
 import { useState } from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux"
+import { NormalButton, ButtonContainer } from './Main'
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 0;
+  gap: 20px;
+`
+
+const cssArea = `
+  display: block;
+  padding: 10px 20px;
+  width: calc(100% - 40px);
+  border: none;
+  letter-spacing: 0.06em;
+  border-radius: 6px;
+  :focus {
+    outline: none;
+  }
+`
 
 const TitleArea = styled.input`
-  
+  ${cssArea}
 `
 
 const ContentArea = styled.textarea`
-  
-`
-
-const NormalButton = styled.div`
+  ${cssArea}
+  height: 100%;
+  resize: none;
+  line-height: 25px;
 `
 
 interface Props {
@@ -66,13 +87,16 @@ interface IsRender {
 
   return (
     <>
-      <NormalButton onClick={props.isRender}>Back</NormalButton>
-      <form onSubmit={handlerFormSubmit}>
+      <Form onSubmit={handlerFormSubmit}>
         <TitleArea type="text" value={title} onChange={(e)=> setTitle(e.target.value)}></TitleArea>
         <ContentArea value={contents} onChange={(e) => setContents(e.target.value)}></ContentArea>
-        <button>Done</button>
-      </form>
-      <button value={'del'} onClick={handlerFormSubmit}>delete</button>
+        <NormalButton>Done</NormalButton>
+      </Form>
+      <ButtonContainer>
+        <NormalButton onClick={props.isRender}>Back</NormalButton>
+        <NormalButton value={'del'} onClick={handlerFormSubmit}>delete</NormalButton>
+      </ButtonContainer>
+
     </>
   )
 }
