@@ -4,18 +4,19 @@ import Modify from './components/Modify'
 import { createGlobalStyle } from "styled-components"
 import styled from 'styled-components'
 
+//미디어쿼리
 export const device = {
   laptop: `(max-width: 780px)`,
   phone: `(max-width: 480px)`,
 }
 
+//normalize
 const GlobalStyle = createGlobalStyle`
   * {margin: 0; padding: 0; color: #333;}
   a {text-decoration: none;}
   ul, ol {list-style: none;}
   html, body {font-family: 'Roboto', sans-serif;}
 `
-
 
 const NoteBG = styled.div`
   background: #ebd3d3;
@@ -25,6 +26,7 @@ const NoteBG = styled.div`
   width: 100%;
   height: 100vh;
 `
+
 const NoteContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,8 +58,6 @@ const NoteContainer = styled.div`
     color: #666;
   }
 `
-
-
 
 function App() {
   const [renderComp, setRenderComp] = useState<boolean>(true)

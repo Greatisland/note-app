@@ -3,8 +3,6 @@ import styled from "styled-components"
 import { selectNote } from "./store"
 import { useDispatch } from "react-redux"
 
-
-
 const SearchBar = styled.input`
   width: 100%;
   border: none;
@@ -90,16 +88,19 @@ interface IsRender {
   const [keyword, setKeyword] = useState('')
   const [search, setSearch] = useState('')
 
+  //전체 노트 데이터 가져오기
   const renderNotes = () => {
     const data = localStorage.getItem('memoKey')
     if(data !== null && data !== undefined && typeof data === 'string') setNoteDatas(JSON.parse(data))
   }
 
+  //전체 노트 삭제
   const allDelete = () => {
     localStorage.clear()
     setNoteDatas([])
   }
 
+  //현재 선택한 노트로 이동
   const selectNotes = (e) => {
     const index = e.target.getAttribute('id')||e.target.parentNode.getAttribute('id')
     const title = noteDatas[index].title
@@ -109,11 +110,13 @@ interface IsRender {
     props.isRender()
   }
 
+  //노트 생성창으로 이동
   const createNotes = () => {
     dispatch(selectNote({title: '', contents: '', index: '', date: ''}))
     props.isRender()
   }
 
+  //검색 후 해당 노트리스트 리렌더링
   const searchKeyword = (e: React.FormEvent) => {
     e.preventDefault()
     setSearch(keyword)

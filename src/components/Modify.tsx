@@ -63,12 +63,13 @@ interface IsRender {
       dataBase.push(...JSON.parse(data))
     }
 
-    //index값이 존재할 경우(수정)해당 index요소 제거후 새 값 추가 및 로컬스토리지에도 추가
+    //존재하는 노트 수정일 경우
     if(state.index){
-      
+      //delete는 현재 노트값 삭제
       if(e.target.value === 'del'){
         dataBase.splice(state.index, 1)
       }else{
+      //수정 후 데이터베이스 추가 
         dataBase.splice(state.index, 1, currentDB)
       }
 
@@ -76,7 +77,15 @@ interface IsRender {
       localStorage.setItem(`memoKey`, jsonDB)
       props.isRender()
 
+    //새노트 추가일 경우
     }else if(title !== state.title && contents !== state.contents){
+      //delete는 현재 작성내용을 초기화시키는 역할부여
+      if(e.target.value === 'del'){
+        setTitle('')
+        setContents('')
+        return
+      }
+
       //현재 입력값을 dataBase에 추가한 후 다시 로컬스토리지에 추가
       dataBase.push(currentDB)
       const jsonDB = JSON.stringify(dataBase)
@@ -94,9 +103,8 @@ interface IsRender {
       </Form>
       <ButtonContainer>
         <NormalButton onClick={props.isRender}>Back</NormalButton>
-        <NormalButton value={'del'} onClick={handlerFormSubmit}>delete</NormalButton>
+        <NormalButton value={'del'} onClick={handlerFormSubmit}>Delete</NormalButton>
       </ButtonContainer>
-
     </>
   )
 }
