@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { selectNote } from "./store"
 import { useDispatch } from "react-redux"
+import Swal from "sweetalert2"
 
 const SearchBar = styled.input`
   width: 100%;
@@ -76,6 +77,12 @@ export const NormalButton = styled.button`
   }
 `
 
+interface NoteData {
+  title: string
+  contents: string
+  date: string
+}
+
 interface IsRender {
   isRender: () => void
 }
@@ -84,9 +91,9 @@ interface IsRender {
 
   let dispatch = useDispatch()
 
-  const [noteDatas, setNoteDatas] = useState([])
-  const [keyword, setKeyword] = useState('')
-  const [search, setSearch] = useState('')
+  const [noteDatas, setNoteDatas] = useState<NoteData[]>([])
+  const [keyword, setKeyword] = useState<string>('')
+  const [search, setSearch] = useState<string>('')
 
   //전체 노트 데이터 가져오기
   const renderNotes = () => {
@@ -96,13 +103,36 @@ interface IsRender {
 
   //전체 노트 삭제
   const allDelete = () => {
-    localStorage.clear()
-    setNoteDatas([])
+    Swal.fire({
+      title: '노트를 전부 삭제할까요?',
+      text: "한번 삭제하면 되돌릴 수 없어용!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e99797',
+      cancelButtonColor: '#4ec6e4',
+      confirmButtonText: '그래! 지워버려~',
+      cancelButtonText: '시러~'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: '삭제완료',
+          html: `
+          너의 노트. 아주 깔끔하게 싹 사라졌다.
+          `,
+          showConfirmButton: false,
+          timer: 1000
+        })
+        localStorage.clear()
+        setNoteDatas([])
+      }
+    })
+
   }
 
   //현재 선택한 노트로 이동
-  const selectNotes = (e) => {
-    const index = e.target.getAttribute('id')||e.target.parentNode.getAttribute('id')
+  const selectNotes = (e: React.MouseEvent<HTMLElement>) => {
+    const index: string | null = (e.target as HTMLElement).getAttribute('id')||(e.target.parentNode as HTMLElement).getAttribute('id')
     const title = noteDatas[index].title
     const contents = noteDatas[index].contents
     const date = noteDatas[index].date
@@ -135,7 +165,7 @@ interface IsRender {
       <NoteListContainer>
         {noteDatas?.map((data, i) => (
           <ul key={i} onClick={selectNotes}>
-            {data.title.includes(search)?<li id={i}><span>{data.title}</span><strong>{data.date}</strong></li>:null}
+            {data.title.includes(search)?<li id={i.toString()}><span>{data.title}</span><strong>{data.date}</strong></li>:null}
           </ul>
         ))}
       </NoteListContainer>

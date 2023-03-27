@@ -70,7 +70,7 @@ function App() {
         <h1>Notes App</h1>
         <p>You can create, modify, erase, and search notes.</p>
         {renderComp&&<Main isRender={isRender}></Main>}
-        {renderComp||<Modify isRender={isRender}></Modify>}
+        {!renderComp&&<Modify isRender={isRender}></Modify>}
       </NoteContainer>
     </NoteBG>
   )
