@@ -4,7 +4,7 @@ import Modify from './components/Modify'
 import { createGlobalStyle } from "styled-components"
 import styled from 'styled-components'
 
-//미디어쿼리
+//media query
 export const device = {
   laptop: `(max-width: 780px)`,
   phone: `(max-width: 480px)`,
