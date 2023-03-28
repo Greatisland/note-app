@@ -59,7 +59,7 @@ const NoteContainer = styled.div`
   }
 `
 
-function App() {
+const App = () => {
   const [renderComp, setRenderComp] = useState<boolean>(true)
   const isRender = () => setRenderComp(!renderComp)
 
