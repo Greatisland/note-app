@@ -95,6 +95,7 @@ interface IsRender {
   const [keyword, setKeyword] = useState<string>('')
   const [search, setSearch] = useState<string>('')
 
+
   //전체 노트 데이터 가져오기
   const renderNotes = () => {
     const data = localStorage.getItem('memoKey')
