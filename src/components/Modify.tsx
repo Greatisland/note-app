@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux"
 import { NormalButton, ButtonContainer } from './Main'
@@ -46,8 +46,10 @@ interface IsRender {
 
  const Modify = (props: Props) => {
   const state = useSelector(state => state.cart)
-  const [title, setTitle] = useState(state.title)
-  const [contents, setContents] = useState(state.contents)
+  const [noteValue, setNoteValue] = useState<{}>({
+    title: state.title,
+    contents: state.contents
+  })
 
   const handlerFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,7 +58,11 @@ interface IsRender {
     const date: string = 
     new Date().getFullYear().toString() +'.'+ (new Date().getMonth()+1).toString().padStart(2,'0') 
     +'.'+ new Date().getDate().toString()
-    const currentDB = {title, contents, date}
+    const currentDB = {
+      title: noteValue.title, 
+      contents: noteValue.contents,
+      date
+    }
     
     //기존 로컬스토리지 값을 빈 배열인 dataBase로 옮겨담음
     const data = localStorage.getItem('memoKey')
@@ -114,11 +120,13 @@ interface IsRender {
       }
 
     //새 노트 추가일 경우
-    }else if(title !== state.title && contents !== state.contents){
+    }else if(noteValue.title !== state.title && noteValue.contents !== state.contents){
       //delete는 현재 작성내용을 초기화시키는 역할부여
       if(e.target.value === 'del'){
-        setTitle('')
-        setContents('')
+        setNoteValue({
+          title: '',
+          contents: ''
+        })
         return
       }
 
@@ -150,11 +158,19 @@ interface IsRender {
     }
   }
 
+  const onChange = (e: React.FormEvent) => {
+    const { value, name } = e.target
+    setNoteValue({
+      ...noteValue,
+      [name]: value
+    })
+  }
+
   return (
     <>
       <Form onSubmit={handlerFormSubmit}>
-        <TitleArea type="text" value={title} onChange={(e)=> setTitle(e.target.value)} placeholder="제목을 입력해주세요..."></TitleArea>
-        <ContentArea value={contents} onChange={(e) => setContents(e.target.value)} placeholder="내용을 입력해주세요..."></ContentArea>
+        <TitleArea type="text" name="title" value={noteValue.title} onChange={onChange} placeholder="제목을 입력해주세요..."></TitleArea>
+        <ContentArea value={noteValue.contents} name="contents" onChange={onChange} placeholder="내용을 입력해주세요..."></ContentArea>
         <NormalButton>Done</NormalButton>
       </Form>
       <ButtonContainer>
