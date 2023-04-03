@@ -124,7 +124,7 @@ interface IsRender {
           showConfirmButton: false,
           timer: 1000
         })
-        localStorage.clear()
+        localStorage.removeItem('memoKey')
         setNoteDatas([])
       }
     })
