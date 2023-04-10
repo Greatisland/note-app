@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux"
+import { RootState } from './store'
 import { NormalButton, ButtonContainer } from './Main'
 import Swal from "sweetalert2"
 
@@ -35,25 +36,20 @@ const ContentArea = styled.textarea`
   line-height: 25px;
 `
 
-interface Props {
-  IsRender: IsRender
-  SelectValue: {}
-}
-
 interface IsRender {
   isRender: () => void
 }
 
- const Modify = (props: Props) => {
-  const state = useSelector(state => state.cart)
-  const [noteValue, setNoteValue] = useState<{}>({
+ const Modify = (props: IsRender) => {
+  const state = useSelector((state: RootState) => state.cart)
+  const [noteValue, setNoteValue] = useState({
     title: state.title,
     contents: state.contents
   })
 
   const handlerFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    let dataBase = []
+    let dataBase: object[] = []
 
     const date: string = 
     new Date().getFullYear().toString() +'.'+ (new Date().getMonth()+1).toString().padStart(2,'0') 
@@ -73,16 +69,16 @@ interface IsRender {
     //존재하는 노트 수정일 경우
     if(state.index){
       //delete는 현재 노트값 삭제
-      if(e.target.value === 'del'){
+      if((e.target as HTMLButtonElement).value === 'del'){
         Swal.fire({
           title: '정말로 이 노트를 삭제할까요?',
-          text: "한번 삭제하면 되돌릴 수 없어용!",
+          text: "한번 삭제하면 되돌릴 수 없어요!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#e99797',
           cancelButtonColor: '#4ec6e4',
-          confirmButtonText: '그래! 지워버려~',
-          cancelButtonText: '시러~'
+          confirmButtonText: '지우겠습니다.',
+          cancelButtonText: '지우지 않겠습니다.'
         }).then((result) => {
           if (result.isConfirmed) {
             Swal.fire({
@@ -95,7 +91,7 @@ interface IsRender {
               timer: 1000
             })
 
-            dataBase.splice(state.index, 1)
+            dataBase.splice(Number(state.index), 1)
             const jsonDB = JSON.stringify(dataBase)
             localStorage.setItem(`memoKey`, jsonDB)
             props.isRender()
@@ -106,7 +102,7 @@ interface IsRender {
         })
       }else{
       //수정 후 데이터베이스 추가 
-        dataBase.splice(state.index, 1, currentDB)
+        dataBase.splice(Number(state.index), 1, currentDB)
         Swal.fire({
           icon: 'success',
           title: '노트 수정 완료!',
@@ -122,7 +118,7 @@ interface IsRender {
     //새 노트 추가일 경우
     }else if(noteValue.title !== state.title && noteValue.contents !== state.contents){
       //delete는 현재 작성내용을 초기화시키는 역할부여
-      if(e.target.value === 'del'){
+      if((e.target as HTMLButtonElement).value === 'del'){
         setNoteValue({
           title: '',
           contents: ''
@@ -146,7 +142,7 @@ interface IsRender {
       })
       return
     }
-    if(e.target.value !== 'del'){
+    if((e.target as HTMLButtonElement).value !== 'del'){
       Swal.fire({
         html: `
         제목과 내용을 모두 입력해주세요!
@@ -159,7 +155,7 @@ interface IsRender {
   }
 
   const onChange = (e: React.FormEvent) => {
-    const { value, name } = e.target
+    const { value, name } = (e.target as HTMLInputElement)
     setNoteValue({
       ...noteValue,
       [name]: value

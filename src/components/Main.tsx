@@ -130,14 +130,15 @@ interface IsRender {
     })
 
   }
-
   //현재 선택한 노트로 이동
   const selectNotes = (e: React.MouseEvent<HTMLElement>) => {
-    const index: string | null = (e.target as HTMLElement).getAttribute('id')||(e.target.parentNode as HTMLElement).getAttribute('id')
-    const title = noteDatas[index].title
-    const contents = noteDatas[index].contents
-    const date = noteDatas[index].date
-    dispatch(selectNote({index,title,contents,date}))
+    let index = (e.target as HTMLElement).getAttribute('id')||((e.target as HTMLElement).parentNode as HTMLElement).getAttribute('id')
+    if(index !== null){
+      const title = noteDatas[Number(index)].title
+      const contents = noteDatas[Number(index)].contents
+      const date = noteDatas[Number(index)].date
+      dispatch(selectNote({index,title,contents,date}))
+    }
     props.isRender()
   }
 

@@ -1,28 +1,41 @@
-import {configureStore, createSlice} from "@reduxjs/toolkit"
+import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-let note = createSlice({
-  name: 'note',
+interface NoteState {
+  title: string
+  index: string
+  contents: string
+  date: string
+}
+
+interface RootState {
+  cart: NoteState
+}
+
+
+let cart = createSlice({
+  name: 'cart',
   initialState: {
     title: '',
     index: '',
     contents: '',
     date: ''
-  },
+  } as NoteState,
   reducers: {
-    selectNote(state, action){
+    selectNote(state, action: PayloadAction<NoteState>){
       state.title = action.payload.title
       state.index = action.payload.index
       state.contents = action.payload.contents
       state.date = action.payload.date
-      console.log(state.index)
     },
   }
 })
 
-export let {selectNote} = note.actions
+export let { selectNote } = cart.actions
 const store = configureStore({
   reducer : {
-    cart: note.reducer,
+    cart: cart.reducer,
   }
 })
+
 export default store
+export type { NoteState, RootState }
