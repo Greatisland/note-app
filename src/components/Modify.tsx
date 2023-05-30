@@ -53,7 +53,7 @@ interface IsRender {
 
     const date: string = 
     new Date().getFullYear().toString() +'.'+ (new Date().getMonth()+1).toString().padStart(2,'0') 
-    +'.'+ new Date().getDate().toString()
+    +'.'+ new Date().getDate().toString().padStart(2,'0')
     const currentDB = {
       title: noteValue.title, 
       contents: noteValue.contents,
